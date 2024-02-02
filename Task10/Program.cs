@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Design.Serialization;
 using System.Reflection;
 
-string path = "D:\\OzonTechPoint\\10\\50\\1";
+string path = "D:\\OzonTechPoint\\10\\50\\15";
 using (StreamReader sr = new StreamReader(path))
 {
     int t = int.Parse(sr.ReadLine());
@@ -53,6 +53,7 @@ using (StreamReader sr = new StreamReader(path))
             }
 
         }
+        roots.Sort((a, b) => a.Value.Id.CompareTo(b.Value.Id));
         foreach (var item in dict.Values)
         {
             
