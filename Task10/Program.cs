@@ -8,25 +8,20 @@ using (StreamReader sr = new StreamReader(path))
     for (int i = 0; i < t; i++)
     {
         int n = int.Parse(sr.ReadLine());
+        int countWhiteSpace = 0;
         List<Comment> tree = new List<Comment>();
         for (int j = 0; j < n; j++)
         {
 
             string input = sr.ReadLine();
-            int index = 0;
-            foreach (char item in input)
+            int firstSpaceIndex = input.IndexOf(' ');
+            int secondSpaceIndex = -1;
+            if (firstSpaceIndex != -1)
             {
-                if (Char.IsLetter(item))
-                {
-                    break;
-                }
-                else
-                {
-                    index++;
-                }
+                secondSpaceIndex = input.IndexOf(' ', firstSpaceIndex + 1);
             }
-            string text = input.Substring(index);
-            string ids = input.Substring(0, index);
+            string text = input.Substring(secondSpaceIndex+1);
+            string ids = input.Substring(0, secondSpaceIndex);
             string[] id = ids.Split(' ');
             int[] arr = new int[2];
             for (int k = 0; k < 2; k++)
@@ -64,10 +59,16 @@ using (StreamReader sr = new StreamReader(path))
             item.Children.Sort((a, b) =>
             a.Value.Id.CompareTo(b.Value.Id));
         }
+        bool IsFirst = true;
         foreach (var root in roots)
-        {
-            root.Print("", true);
+        {   
+            root.Print(IsFirst, "", true);
+            IsFirst= false;
         }
+        if (i!=t-1)
+        {
+            Console.WriteLine();
+        }       
     }
 }
 
@@ -92,17 +93,14 @@ public class Node
     {
         Children.Add(child);
     }
-    bool isFirst = true;
-
-    public void Print(string indent = "", bool last = true)
+    public void Print(bool IsFirst, string indent = "", bool last = true)
     {
         
-        if(Value.parentId == -1) 
+        if (Value.parentId == -1) 
         {
-            if(isFirst)
+            if(IsFirst)
             {
                 Console.WriteLine(Value.Text);
-                isFirst = false;
             }
             else
             {
@@ -130,12 +128,12 @@ public class Node
             if (i == Children.Count - 1)
             {
                 Console.WriteLine(indent + "|");
-                Children[i].Print(indent, true);
+                Children[i].Print(IsFirst, indent, true);
             }
             else
             {
                 Console.WriteLine(indent + "|");
-                Children[i].Print(indent, false);
+                Children[i].Print(IsFirst, indent, false);
             }
         }      
     }
